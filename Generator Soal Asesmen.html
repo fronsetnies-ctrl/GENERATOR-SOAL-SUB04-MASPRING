@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Generator Soal Asesmen</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--tx:#1d2433;--mu:#667085;--bd:#dde1ea;--ac:#2f5bea;--ac2:#e8eefe;--ok:#12805c;--ft:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151c;--card:#1b1f2a;--tx:#e8ebf2;--mu:#98a1b3;--bd:#2d3342;--ac:#7b9bff;--ac2:#232b45;--ok:#4cd6a4;--ft:#0d1220;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12151c;--card:#1b1f2a;--tx:#e8ebf2;--mu:#98a1b3;--bd:#2d3342;--ac:#7b9bff;--ac2:#232b45;--ok:#4cd6a4;--ft:#0d1220;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:920px;margin:0 auto;padding:20px 14px 60px}
+h1{font-size:22px;margin:0 0 2px}.sub{color:var(--mu);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:14px}
+.card h2{font-size:15px;margin:0 0 12px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+label{display:block;font-size:12.5px;color:var(--mu);margin-bottom:3px}
+input,select,textarea{width:100%;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+textarea{min-height:64px;resize:vertical}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{flex:1;min-width:140px;padding:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);border-radius:8px;cursor:pointer;font:inherit}
+.seg button.on{background:var(--ac);border-color:var(--ac);color:var(--ft)}
+details{border:1px solid var(--bd);border-radius:8px;margin-bottom:8px;background:var(--bg)}
+summary{cursor:pointer;padding:9px 12px;font-weight:600;font-size:14px}
+summary small{color:var(--mu);font-weight:400}
+.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px;padding:4px 12px 12px}
+.it{display:flex;align-items:center;gap:8px;padding:6px 8px;border:1px solid var(--bd);border-radius:8px;background:var(--card)}
+.it.on{border-color:var(--ac);background:var(--ac2)}
+.it input[type=checkbox]{width:auto}.it span{flex:1;font-size:13.5px}
+.it input[type=number]{width:58px;padding:4px 6px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.opts label{display:inline-flex;gap:6px;align-items:center;color:var(--tx);font-size:14px;margin-right:14px}
+.opts input{width:auto}
+.btn{padding:10px 18px;border-radius:8px;border:1px solid var(--ac);background:var(--ac);color:var(--ft);cursor:pointer;font:inherit;font-weight:600}
+.btn.s{background:transparent;color:var(--ac)}
+.btn:disabled{opacity:.5;cursor:default}
+.mu{color:var(--mu);font-size:13px}
+#out{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:20px;display:none}
+#out h2{font-size:18px;margin:18px 0 6px}#out h3{font-size:15.5px;margin:14px 0 4px}
+#out table{border-collapse:collapse;margin:8px 0;max-width:100%}
+#out td,#out th{border:1px solid var(--bd);padding:4px 8px;text-align:left}
+.tw{overflow-x:auto}.blk{margin-bottom:8px}.tb{margin:10px 0 4px}.tb button{padding:3px 10px;font-size:12px}.nt .tb{display:none}#out hr{border:0;border-top:1px solid var(--bd);margin:12px 0}#out th{background:var(--ac2)}#out h4{font-size:14px;margin:10px 0 3px}
+pre.p{white-space:pre-wrap;background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:10px;font-size:12.5px;max-height:240px;overflow:auto}
+</style>
+</head>
+<body>
+<main>
+<h1>Generator Soal Asesmen</h1>
+<p class="sub">Formatif · Sumatif Tengah Semester · Sumatif Akhir Semester — 50 bentuk soal, dibuat otomatis oleh Claude.</p>
+
+<div class="card"><h2>1. Jenis asesmen</h2>
+<div class="seg" id="jenis"></div></div>
+
+<div class="card"><h2>2. Identitas &amp; materi</h2>
+<div class="g">
+<div><label>Jenjang</label><select id="jenjang"><option>SD/MI</option><option>SMP/MTs</option><option>SMA/MA</option><option>SMK</option><option>PAUD/TK</option></select></div>
+<div><label>Kelas / Fase</label><input id="kelas" placeholder="mis. Kelas 5 / Fase C"></div>
+<div><label>Mata pelajaran</label><input id="mapel" placeholder="mis. IPAS"></div>
+<div><label>Semester</label><select id="smt"><option>Ganjil</option><option>Genap</option></select></div>
+<div><label>Tingkat kesulitan</label><select id="lvl"><option>Campuran (mudah-sedang-sulit)</option><option>Mudah</option><option>Sedang</option><option>Sulit</option><option>HOTS dominan</option></select></div>
+<div><label>Bahasa soal</label><select id="bhs"><option>Indonesia</option><option>Inggris</option><option>Indonesia &amp; Inggris</option></select></div>
+<div><label>Alokasi waktu</label><input id="waktu" placeholder="mis. 60 menit"></div>
+<div><label>Total skor</label><input id="skor" placeholder="mis. 100" value="100"></div>
+</div>
+<div style="margin-top:10px"><label>Topik / materi / capaian pembelajaran (CP) / tujuan pembelajaran</label>
+<textarea id="topik" placeholder="mis. Siklus air, perubahan wujud benda, dan dampaknya bagi kehidupan"></textarea></div>
+<div style="margin-top:10px"><label>Catatan tambahan (opsional): teks bacaan sendiri, gaya soal, konteks lokal, dll.</label>
+<textarea id="cat"></textarea></div>
+</div>
+
+<div class="card"><h2>3. Pilih bentuk soal &amp; jumlahnya</h2>
+<div class="row" id="pre" style="margin-bottom:10px"><span class="mu">Komposisi cepat:</span></div>
+<div class="row" style="margin-bottom:10px"><span class="mu" id="tot"></span><button class="btn s" id="clr" style="margin-left:auto;padding:5px 12px">Kosongkan pilihan</button></div>
+<div id="cats"></div></div>
+
+<div class="card"><h2>4. Kelengkapan</h2>
+<div class="opts">
+<label><input type="checkbox" id="oKunci" checked> Kunci jawaban</label>
+<label><input type="checkbox" id="oRub" checked> Rubrik penilaian &amp; skor</label>
+<label><input type="checkbox" id="oKisi" checked> Kisi-kisi otomatis</label>
+<label><input type="checkbox" id="oPemb"> Pembahasan singkat</label>
+<label><input type="checkbox" id="oId"> Kolom identitas siswa</label>
+</div></div>
+
+<div class="row" style="margin-bottom:14px">
+<button class="btn" id="go">Buat soal</button>
+<button class="btn s" id="stop" style="display:none">Hentikan</button>
+<button class="btn s" id="cp">Salin perintah (prompt)</button>
+<span class="mu" id="st"></span>
+</div>
+
+<div id="out">
+<div class="row" style="margin-bottom:10px" id="dl">
+<button class="btn s" id="dHtml">Unduh (.html, bisa dibuka di Word)</button>
+<button class="btn s" id="dTxt">Unduh (.txt)</button>
+</div>
+<div id="res" contenteditable="true"></div><p class="mu">Hasil dapat diedit langsung di sini sebelum diunduh.</p></div>
+<details class="card" id="hw" style="display:none"><summary>Riwayat (tersimpan di peramban ini)</summary><div id="hl" style="margin-top:10px"></div></details>
+<div id="pw" style="display:none" class="card"><h2>Prompt</h2><pre class="p" id="pt"></pre><p class="mu">Tempel prompt ini ke Claude jika tombol “Buat soal” tidak tersedia.</p></div>
+</main>
+<script>
+const JENIS={
+"Formatif":"Asesmen formatif (cek pemahaman di tengah pembelajaran; ringkas, fokus diagnostik, ada umpan balik)",
+"Sumatif Tengah Semester (STS)":"Sumatif Tengah Semester: mencakup materi paruh pertama semester, komposisi seimbang pengetahuan dan penalaran",
+"Sumatif Akhir Semester (SAS)":"Sumatif Akhir Semester: mencakup seluruh materi semester, komposisi dari mudah ke HOTS"};
+const C={
+"Objektif":["Pilihan Ganda","Pilihan Ganda Kompleks","Benar–Salah","Ya–Tidak","Isian Singkat","Melengkapi Kalimat","Jawaban Singkat","Menjodohkan","Mengurutkan","Mengelompokkan","Mencocokkan Pasangan","Drag and Drop"],
+"Uraian":["Uraian Singkat","Uraian Panjang","Menemukan Kesalahan","Memperbaiki Kalimat"],
+"Berbasis stimulus":["Soal Berbasis Gambar","Soal Berbasis Teks","Soal Berbasis Tabel","Soal Berbasis Grafik","Soal Berbasis Infografik","Soal Multiteks"],
+"Kognitif & literasi":["Soal Literasi","Soal Numerasi","Soal HOTS","Soal Studi Kasus","Soal Pemecahan Masalah","Soal Analisis","Soal Evaluasi","Soal Kreativitas","Soal AKM"],
+"Kinerja & proyek":["Soal Respons Lisan","Soal Praktik/Performa","Soal Presentasi","Soal Proyek","Soal Produk/Karya","Soal Portofolio"],
+"Non-tes & karakter":["Soal Observasi","Soal Refleksi Diri","Soal Penilaian Antarteman"],
+"Bahasa":["Soal Melengkapi Dialog","Soal Menyusun Kata Menjadi Kalimat","Soal Menyusun Paragraf","Soal Menerjemahkan","Soal Dikte","Soal Menyimak (Listening)","Soal Berbicara (Speaking)","Soal Membaca (Reading)","Soal Menulis (Writing)","Soal Teka-Teki Kata"]};
+const LOW=/Proyek|Portofolio|Presentasi|Produk|Praktik|Observasi|Refleksi|Antarteman|Panjang|Dikte|Berbicara|Lisan/;
+const $=i=>document.getElementById(i);
+let jenis="Formatif",sel={},last="",ctl=null;
+const jb=$("jenis");
+Object.keys(JENIS).forEach(k=>{const b=document.createElement("button");b.textContent=k;b.onclick=()=>{jenis=k;[...jb.children].forEach(x=>x.classList.toggle("on",x===b))};if(k===jenis)b.className="on";jb.appendChild(b)});
+const cats=$("cats"),R={};
+Object.entries(C).forEach(([c,arr],i)=>{
+ const d=document.createElement("details");if(i==0)d.open=true;
+ const s=document.createElement("summary");s.innerHTML=c+" <small>("+arr.length+")</small>";d.appendChild(s);
+ const w=document.createElement("div");w.className="items";
+ arr.forEach(n=>{const r=document.createElement("div");r.className="it";
+  r.innerHTML='<input type="checkbox"><span></span><input type="number" min="1" max="30" value="'+(LOW.test(n)?1:5)+'">';
+  r.querySelector("span").textContent=n;
+  const cb=r.querySelector("input"),nu=r.querySelector("input[type=number]");
+  const up=()=>{r.classList.toggle("on",cb.checked);if(cb.checked)sel[n]=Math.min(30,Math.max(1,Math.round(+nu.value)||1));else delete sel[n];tot()};
+  cb.onchange=up;nu.oninput=up;nu.onchange=()=>{nu.value=Math.min(30,Math.max(1,Math.round(+nu.value)||1));up()};r.querySelector("span").onclick=()=>{cb.checked=!cb.checked;up()};
+  r._cb=cb;r._up=up;r._nu=nu;R[n]=r;w.appendChild(r)});
+ d.appendChild(w);cats.appendChild(d)});
+function tot(){const n=Object.keys(sel).length,s=Object.values(sel).reduce((a,b)=>a+b,0);$("tot").textContent=n+" bentuk dipilih · "+s+" butir soal"}
+$("clr").onclick=()=>{document.querySelectorAll(".it").forEach(r=>{r._cb.checked=false;r._up()})};
+tot();
+const PRE={"Formatif":{"Pilihan Ganda":5,"Isian Singkat":3,"Uraian Singkat":2,"Soal Refleksi Diri":1},
+"Sumatif Tengah Semester (STS)":{"Pilihan Ganda":15,"Pilihan Ganda Kompleks":3,"Benar–Salah":5,"Isian Singkat":5,"Uraian Singkat":3,"Uraian Panjang":1},
+"Sumatif Akhir Semester (SAS)":{"Pilihan Ganda":20,"Pilihan Ganda Kompleks":5,"Menjodohkan":5,"Isian Singkat":5,"Uraian Singkat":4,"Soal HOTS":3,"Soal Studi Kasus":1,"Soal Berbasis Teks":3}};
+Object.keys(PRE).forEach(k=>{const b=document.createElement("button");b.className="btn s";b.style.padding="5px 12px";const m=k.match(/\((.+)\)/);b.textContent=m?m[1]:k;
+ b.onclick=()=>{$("clr").click();jenis=k;[...jb.children].forEach(x=>x.classList.toggle("on",x.textContent===k));Object.entries(PRE[k]).forEach(([n,c])=>{const r=R[n];r._cb.checked=true;r._nu.value=c;r._up()})};$("pre").appendChild(b)});
+function buildPrompt(sub,start,part,nk){sub=sub||sel;start=start||1;
+ const v=i=>$(i).value.trim();
+ const types=Object.entries(sub).map(([k,n])=>"- "+k+": "+n+" butir").join("\n");
+ const ex=[];
+ if($("oKisi").checked&&!nk)ex.push("Kisi-kisi (tabel: No, tujuan pembelajaran/indikator, level kognitif, bentuk soal, nomor soal)");
+ if($("oKunci").checked)ex.push("Kunci jawaban");
+ if($("oRub").checked)ex.push("Rubrik penilaian dan skor untuk soal uraian/kinerja/non-tes");
+ if($("oPemb").checked)ex.push("Pembahasan singkat tiap soal");
+ return `Kamu adalah guru ahli penyusun asesmen Kurikulum Merdeka di Indonesia. Susun naskah asesmen berikut dalam bahasa ${v("bhs")==="Indonesia"?"Indonesia":v("bhs")}.
+
+Jenis asesmen: ${jenis} — ${JENIS[jenis]}
+Jenjang: ${v("jenjang")} | Kelas/Fase: ${v("kelas")||"(sesuaikan jenjang)"} | Mapel: ${v("mapel")||"(umum)"} | Semester: ${v("smt")}
+Materi/CP/TP: ${v("topik")||"(pilih materi umum yang sesuai mapel dan kelas)"}
+Tingkat kesulitan: ${v("lvl")}
+Alokasi waktu: ${v("waktu")||"(sesuaikan)"} | Total skor: ${v("skor")||"100"} (bagi bobot skor antarbagian secara proporsional)
+${v("cat")?"Catatan guru: "+v("cat")+"\n":""}
+Bentuk dan jumlah soal:
+${types}
+
+Aturan:
+1. Bagi naskah per bagian sesuai bentuk soal, beri petunjuk pengerjaan singkat, nomor berurutan, dan bobot skor.
+2. Untuk soal berbasis gambar/grafik/infografik, tulis deskripsi gambar yang perlu disisipkan guru dalam kurung siku [GAMBAR: ...]; tabel dibuat dengan format tabel Markdown.
+3. Soal menyimak/berbicara/dikte: sertakan skrip untuk dibacakan guru. Soal praktik/proyek/portofolio/observasi/refleksi/antarteman: sertakan instruksi, kriteria, dan rubrik/lembar penilaian.
+4. Pilihan ganda: 4 opsi (A–D), distraktor masuk akal. Soal harus sesuai usia, tanpa bias SARA, kontekstual, dan selaras dengan tujuan pembelajaran.
+5. ${$("oId").checked&&start===1?"Mulai dengan kolom identitas (Nama, Kelas, No. Absen, Hari/Tanggal).":"Tidak perlu kolom identitas."}
+6. ${part?"Ini bagian "+part+" dari naskah; nomor soal dimulai dari "+start+". "+(start===1?"Awali dengan judul naskah. ":"Tanpa judul utama. ")+"Di akhir bagian ini sertakan HANYA: "+(ex.filter(x=>!/^Kisi/.test(x)).join("; ")||"tidak ada")+". Jangan buat kisi-kisi.":"Setelah semua soal, sertakan: "+(ex.join("; ")||"tidak ada tambahan")+(nk?". Jangan buat kisi-kisi (dibuat terpisah)":"")}.
+7. Format: judul dengan "# ", bagian dengan "## ", soal dengan nomor. Jangan beri komentar di luar naskah.`}
+$("cp").onclick=async()=>{
+ if(!Object.keys(sel).length){$("st").textContent="Pilih minimal satu bentuk soal.";return}
+ const p=buildPrompt();$("pt").textContent=p;$("pw").style.display="block";
+ try{await navigator.clipboard.writeText(p);$("st").textContent="Prompt disalin."}catch(e){$("st").textContent="Salin manual dari kotak di bawah."}};
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const inl=s=>esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/(^|[^*])\*(?![\s*])([^*]+?)\*(?!\*)/g,"$1<i>$2</i>");
+function md(t){
+ const L=t.split("\n"),o=[];let tb=[];
+ const sep=r=>/^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/.test(r);
+ const flush=()=>{if(!tb.length)return;const hd=tb.length>1&&sep(tb[1]);const rows=tb.filter(r=>!sep(r)).map((r,i)=>{const t=hd&&i===0?"th":"td";return "<tr>"+r.trim().replace(/^\||\|$/g,"").split("|").map(c=>"<"+t+">"+inl(c.trim())+"</"+t+">").join("")+"</tr>"});
+  o.push('<div class="tw"><table>'+rows.join("")+"</table></div>");tb=[]};
+ L.forEach(l=>{
+  if(/^\s*\|/.test(l)){tb.push(l);return}flush();
+  if(/^\s*(-{3,}|\*{3,})\s*$/.test(l))o.push("<hr>");
+  else if(/^# /.test(l))o.push("<h1 style='font-size:20px'>"+inl(l.slice(2))+"</h1>");
+  else if(/^## /.test(l))o.push("<h2>"+inl(l.slice(3))+"</h2>");
+  else if(/^### /.test(l))o.push("<h3>"+inl(l.slice(4))+"</h3>");
+  else if(/^#{4,} /.test(l))o.push("<h4>"+inl(l.replace(/^#+ /,""))+"</h4>");
+  else if(/^\s*[-*\u2022] /.test(l))o.push("<div>\u2022 "+inl(l.replace(/^\s*[-*\u2022] /,""))+"</div>");
+  else if(/^\s*$/.test(l))o.push("");
+  else o.push("<div>"+inl(l)+"</div>")});
+ flush();return o.join("\n")}
+const FI=["jenjang","kelas","mapel","smt","lvl","bhs","topik","cat","waktu","skor"];
+try{const s=JSON.parse(localStorage.getItem("gs")||"{}");FI.forEach(i=>{if(s[i]!=null)$(i).value=s[i]})}catch(e){}
+FI.forEach(i=>$(i).addEventListener("input",()=>{try{localStorage.setItem("gs",JSON.stringify(Object.fromEntries(FI.map(j=>[j,$(j).value]))))}catch(e){}}));
+let sample=null;
+(async()=>{try{sample=await claude.use("sample")}catch(e){}if(!sample){$("go").title="Fitur Claude tidak tersedia di tampilan ini";$("st").textContent="Tombol Buat soal belum aktif di tampilan ini; gunakan “Salin perintah”."}})();
+let acc="",PARTS=[],KISI="",KISIH=null;
+function startNo(i){return 1+PARTS.slice(0,i).reduce((a,p)=>a+Object.values(p.types).reduce((x,y)=>x+y,0),0)}
+function renderAll(){
+ $("res").innerHTML=(KISI?'<div class="blk"><div class="tb" contenteditable="false"><button class="btn s rk">\u21bb Buat ulang kisi-kisi</button></div>'+(KISIH||md(KISI))+'</div>':'')+PARTS.map((p,i)=>'<div class="blk" data-i="'+i+'"><div class="tb" contenteditable="false"><button class="btn s rg" data-i="'+i+'">\u21bb Buat ulang: '+esc(p.name)+'</button></div>'+(p.html||md(p.text))+'</div>').join("");
+ last=KISI+PARTS.map(p=>p.text).join("")}
+function syncEdits(){document.querySelectorAll("#res .blk").forEach(b=>{const c=b.cloneNode(true);const t=c.querySelector(".tb");if(t)t.remove();if(b.dataset.i!=null)PARTS[b.dataset.i].html=c.innerHTML;else KISIH=c.innerHTML})}
+async function genKisi(N){
+ $("st").textContent="Menyusun kisi-kisi"+(N?" (bagian "+N+" dari "+N+")":"")+"\u2026";
+ const v=i=>$(i).value.trim();
+ const pr="Berdasarkan naskah soal berikut, buat KISI-KISI saja dalam tabel Markdown dengan kolom: No, Tujuan Pembelajaran/Indikator, Materi, Level Kognitif (C1\u2013C6), Bentuk Soal, Nomor Soal. Satu baris untuk setiap tujuan/indikator; pastikan semua nomor soal tercakup dan sesuai nomor di naskah. Awali dengan baris '## Kisi-kisi', lalu satu baris identitas (jenjang, kelas, mapel, semester). Abaikan kunci jawaban dan rubrik. Tanpa komentar lain.\n\nJenjang: "+v("jenjang")+" | Kelas: "+(v("kelas")||"-")+" | Mapel: "+(v("mapel")||"-")+" | Semester: "+v("smt")+"\nMateri: "+(v("topik")||"-")+"\n\nNASKAH:\n"+PARTS.map(p=>p.text).join("").slice(0,30000);
+ const r=await sample(pr,{modelTier:"default",cache:false,signal:ctl.signal,onText:({text})=>{KISI=text.trim()+"\n\n";KISIH=null;renderAll()}});
+ KISI=r.text.trim()+"\n\n";KISIH=null;renderAll()}
+function busy(on){$("res").contentEditable=on?"false":"true";$("go").disabled=on;$("stop").style.display=on?"":"none"}
+function err(e){
+ if(e&&e.code==="not_granted")$("st").textContent="Izin ditolak. Gunakan \u201cSalin perintah\u201d.";
+ else if(e&&e.code==="rate_limited")$("st").textContent="Terlalu sering, coba lagi sebentar lagi.";
+ else if(ctl&&ctl.signal.aborted)$("st").textContent="Dihentikan.";
+ else $("st").textContent="Gagal membuat soal"+(e&&e.message?": "+e.message:"")+".";}
+async function genPart(i,N,multi){
+ const p=PARTS[i];$("st").textContent="Menyusun bagian "+(i+1)+" dari "+N+": "+p.name+"\u2026";
+ const r=await sample(buildPrompt(p.types,startNo(i),multi?(i+1)+"/"+PARTS.length+" ("+p.name+")":null,true),{modelTier:"complex",cache:false,signal:ctl.signal,onText:({text})=>{p.text=text;p.html=null;renderAll()}});
+ p.text=r.text.trim()+"\n\n";p.html=null;p.cut=r.truncated;renderAll()}
+$("go").onclick=async()=>{
+ if(!Object.keys(sel).length){$("st").textContent="Pilih minimal satu bentuk soal.";return}
+ if(!sample){$("cp").click();return}
+ ctl=new AbortController();KISI="";KISIH=null;curId=null;
+ PARTS=Object.entries(C).map(([c,arr])=>{const o={};arr.forEach(n=>{if(sel[n])o[n]=sel[n]});return{name:c,types:o,text:"",html:null}}).filter(p=>Object.keys(p.types).length);
+ const multi=PARTS.length>1,kisi=$("oKisi").checked,N=PARTS.length+(kisi?1:0);
+ busy(true);$("out").style.display="block";renderAll();
+ try{
+  for(let i=0;i<PARTS.length;i++)await genPart(i,N,multi);
+  if(kisi)await genKisi(N);
+  $("st").textContent=PARTS.some(p=>p.cut)?"Ada bagian yang terpotong; kurangi jumlah butir lalu klik \u201cBuat ulang\u201d pada bagian itu.":"Selesai. Periksa dan edit seperlunya; tiap bagian bisa dibuat ulang.";
+ }catch(e){err(e)}
+ busy(false);saveHist()};
+$("res").addEventListener("click",async e=>{
+ const b=e.target.closest(".rg,.rk");if(!b||!sample||$("go").disabled)return;
+ syncEdits();ctl=new AbortController();busy(true);
+ try{if(b.classList.contains("rk")){await genKisi();$("st").textContent="Kisi-kisi diperbarui."}
+  else{await genPart(+b.dataset.i,PARTS.length,PARTS.length>1);if($("oKisi").checked)await genKisi();$("st").textContent="Bagian dan kisi-kisi diperbarui."}}catch(er){err(er)}
+ busy(false);saveHist()});
+function hist(){try{return JSON.parse(localStorage.getItem("gh")||"[]")}catch(e){return[]}}
+let curId=null;
+function saveHist(){
+ if(!PARTS.some(p=>p.text&&p.text.trim()))return;syncEdits();
+ const h=hist(),t=jenis.replace(/ \(.*\)/,"")+" \u00b7 "+($("mapel").value.trim()||"mapel")+" \u00b7 "+($("kelas").value.trim()||"-");
+ const id=curId||(curId=Date.now()),k=h.findIndex(y=>y.id===id);if(k>=0)h.splice(k,1);
+ h.unshift({id,t,parts:PARTS.map(p=>({name:p.name,types:p.types,text:p.text,html:p.html})),kisi:KISI,kisih:KISIH});
+ try{localStorage.setItem("gh",JSON.stringify(h.slice(0,8)))}catch(e){}
+ drawHist()}
+function drawHist(){
+ const h=hist(),w=$("hl");$("hw").style.display=h.length?"":"none";w.innerHTML="";
+ h.forEach(x=>{const r=document.createElement("div");r.className="row";r.style.marginBottom="6px";
+  const a=document.createElement("button");a.className="btn s";a.style.cssText="flex:1;text-align:left;padding:6px 10px";a.textContent=x.t+" \u2014 "+new Date(x.id).toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"});
+  a.onclick=()=>{curId=x.id;PARTS=x.parts;KISI=x.kisi||"";KISIH=x.kisih||null;$("out").style.display="block";renderAll();$("st").textContent="Riwayat dimuat.";$("out").scrollIntoView()};
+  const d=document.createElement("button");d.className="btn s";d.style.padding="6px 10px";d.textContent="Hapus";
+  d.onclick=()=>{try{localStorage.setItem("gh",JSON.stringify(hist().filter(y=>y.id!==x.id)))}catch(e){}drawHist()};
+  r.append(a,d);w.appendChild(r)})}
+drawHist();
+$("stop").onclick=()=>ctl&&ctl.abort();
+async function save(name,type,data){
+ try{const d=await claude.use("downloads");if(!d){$("st").textContent="Unduhan tidak tersedia; salin teks dari layar.";return}
+  await d.save({filename:name,data:new Blob([data],{type})})}catch(e){if(!e||e.code!=="declined")$("st").textContent="Unduhan gagal."}}
+function cleanHtml(){const c=$("res").cloneNode(true);c.querySelectorAll(".tb").forEach(e=>e.remove());return c.innerHTML}
+const fn=()=>("soal-"+jenis.split(" ")[0]+"-"+($("mapel").value.trim()||"mapel")).toLowerCase().replace(/[^a-z0-9]+/g,"-");
+$("dHtml").onclick=()=>last&&save(fn()+".html","text/html","<!DOCTYPE html><html><head><meta charset='utf-8'><title>Soal</title><style>body{font-family:'Times New Roman',serif;font-size:12pt;line-height:1.5}table{border-collapse:collapse}td,th{border:1px solid #000;padding:4px 8px}</style></head><body>"+cleanHtml()+"</body></html>");
+$("dTxt").onclick=()=>{if(!last)return;$("res").classList.add("nt");const t=$("res").innerText;$("res").classList.remove("nt");save(fn()+".txt","text/plain",t)};
+</script>
+</body>
+</html>
